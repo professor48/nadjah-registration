@@ -13,7 +13,12 @@
 
   body {
     font-family: 'Cairo', 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: 
+      linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%),
+      radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 107, 107, 0.4) 0%, transparent 50%);
+    background-attachment: fixed;
+    background-size: cover;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -23,45 +28,59 @@
     overflow-x: hidden;
   }
 
-  /* خلفية متحركة */
+  /* خلفية ثابتة مع تأثيرات متحركة */
   body::before {
     content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(72, 187, 120, 0.3) 0%, transparent 50%);
-    animation: backgroundFloat 20s ease-in-out infinite;
+      radial-gradient(circle at 30% 70%, rgba(102, 126, 234, 0.2) 0%, transparent 60%),
+      radial-gradient(circle at 70% 30%, rgba(240, 147, 251, 0.2) 0%, transparent 60%),
+      radial-gradient(circle at 50% 50%, rgba(118, 75, 162, 0.1) 0%, transparent 70%);
+    animation: backgroundPulse 8s ease-in-out infinite;
+    z-index: -1;
   }
 
-  @keyframes backgroundFloat {
-    0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.1); }
+  @keyframes backgroundPulse {
+    0%, 100% { 
+      opacity: 0.6; 
+      transform: scale(1) rotate(0deg); 
+    }
+    33% { 
+      opacity: 0.8; 
+      transform: scale(1.05) rotate(1deg); 
+    }
+    66% { 
+      opacity: 0.7; 
+      transform: scale(0.98) rotate(-0.5deg); 
+    }
   }
 
   .container {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 500px;
+    max-width: 520px;
   }
 
   .form-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    padding: 40px 35px;
-    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(25px) saturate(180%);
+    padding: 45px 40px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 
-      0 20px 40px rgba(0,0,0,0.1),
-      0 0 0 1px rgba(255,255,255,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.9);
-    animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      0 25px 50px -12px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 10px 40px rgba(102, 126, 234, 0.1);
+    animation: cardEntrance 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    transform-style: preserve-3d;
   }
 
   .form-card::before {
@@ -70,62 +89,90 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-    background-size: 300% 100%;
-    animation: gradientShift 3s ease-in-out infinite;
+    height: 6px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+    background-size: 400% 100%;
+    animation: gradientFlow 4s ease-in-out infinite;
+    border-radius: 30px 30px 0 0;
   }
 
-  @keyframes gradientShift {
+  @keyframes gradientFlow {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
   }
 
-  @keyframes slideUp {
+  @keyframes cardEntrance {
     from {
       opacity: 0;
-      transform: translateY(60px) scale(0.95);
+      transform: translateY(80px) scale(0.9) rotateX(15deg);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0) scale(1) rotateX(0deg);
     }
   }
 
   .header {
     text-align: center;
-    margin-bottom: 35px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .header::before {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    right: 50%;
+    transform: translateX(50%);
+    font-size: 24px;
+    animation: sparkle 2s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.5; transform: translateX(50%) scale(1); }
+    50% { opacity: 1; transform: translateX(50%) scale(1.2); }
   }
 
   .header h2 {
     color: #2d3748;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: textGradient 3s ease-in-out infinite;
+    text-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+  }
+
+  @keyframes textGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   .header p {
     color: #718096;
-    font-size: 14px;
-    margin-top: 5px;
+    font-size: 16px;
+    margin-top: 8px;
+    opacity: 0.9;
   }
 
   .input-group {
-    margin-bottom: 25px;
+    margin-bottom: 28px;
     position: relative;
+    transform-style: preserve-3d;
   }
 
   .input-group label {
     display: block;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     color: #4a5568;
-    font-size: 14px;
-    transition: color 0.3s ease;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    position: relative;
   }
 
   .input-wrapper {
@@ -135,63 +182,77 @@
   .input-group input,
   .input-group select {
     width: 100%;
-    padding: 16px 50px 16px 16px;
+    padding: 18px 55px 18px 18px;
     border: 2px solid #e2e8f0;
-    border-radius: 15px;
-    font-size: 15px;
+    border-radius: 18px;
+    font-size: 16px;
     outline: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: #f8fafc;
+    background: linear-gradient(145deg, #f8fafc, #ffffff);
     color: #2d3748;
     font-family: inherit;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
   }
 
   .input-group input:focus,
   .input-group select:focus {
     border-color: #667eea;
     box-shadow: 
-      0 0 0 3px rgba(102, 126, 234, 0.1),
-      0 4px 12px rgba(102, 126, 234, 0.15);
-    background: white;
-    transform: translateY(-2px);
+      0 0 0 4px rgba(102, 126, 234, 0.12),
+      0 8px 25px rgba(102, 126, 234, 0.15),
+      inset 0 2px 4px rgba(102, 126, 234, 0.05);
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    transform: translateY(-3px) translateZ(10px);
   }
 
   .input-group input:valid,
   .input-group select:valid {
     border-color: #48bb78;
+    box-shadow: 
+      0 0 0 2px rgba(72, 187, 120, 0.1),
+      inset 0 2px 4px rgba(72, 187, 120, 0.05);
   }
 
   .input-icon {
     position: absolute;
-    right: 16px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
     color: #a0aec0;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    font-size: 18px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
 
   .input-group input:focus + .input-icon,
   .input-group select:focus + .input-icon {
     color: #667eea;
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.15) rotateZ(5deg);
   }
 
   .submit-btn {
     width: 100%;
-    padding: 18px;
+    padding: 20px;
     border: none;
-    border-radius: 15px;
-    font-size: 16px;
+    border-radius: 18px;
+    font-size: 17px;
     font-weight: 600;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 200% 200%;
     color: white;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 
+      0 6px 20px rgba(102, 126, 234, 0.4),
+      0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: buttonGradient 3s ease-in-out infinite;
+  }
+
+  @keyframes buttonGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   .submit-btn::before {
@@ -201,153 +262,277 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.6s;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
   }
 
   .submit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 
+      0 12px 35px rgba(102, 126, 234, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.1);
   }
 
   .submit-btn:hover::before {
     left: 100%;
   }
 
+  .submit-btn:hover::after {
+    width: 300px;
+    height: 300px;
+  }
+
   .submit-btn:active {
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.01);
   }
 
   .loading {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 25px;
     color: #667eea;
     display: none;
-    animation: pulse 2s infinite;
+    animation: loadingPulse 1.5s infinite;
+    font-weight: 500;
   }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+  @keyframes loadingPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
   }
 
   .message {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 25px;
     font-weight: 600;
     display: none;
-    padding: 15px;
-    border-radius: 10px;
-    animation: messageSlide 0.5s ease;
+    padding: 18px;
+    border-radius: 15px;
+    animation: messageAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid transparent;
   }
 
-  @keyframes messageSlide {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes messageAppear {
+    from { 
+      opacity: 0; 
+      transform: translateY(30px) scale(0.9); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
   }
 
   .success {
     background: linear-gradient(135deg, #48bb78, #38a169);
     color: white;
-    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .error {
     background: linear-gradient(135deg, #f56565, #e53e3e);
     color: white;
-    box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+    box-shadow: 0 6px 20px rgba(245, 101, 101, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
-  /* تحسينات للهاتف المحمول */
-  @media (max-width: 480px) {
-    .form-card {
-      padding: 30px 25px;
-      border-radius: 20px;
-    }
-
-    .header h2 {
-      font-size: 24px;
-    }
-
-    .input-group input,
-    .input-group select {
-      padding: 14px 45px 14px 14px;
-      font-size: 14px;
-    }
-
-    .submit-btn {
-      padding: 16px;
-      font-size: 15px;
-    }
-  }
-
-  /* تأثيرات إضافية للتفاعل */
-  .input-group {
-    transform: translateZ(0);
-  }
-
-  .input-group:hover label {
-    color: #667eea;
-  }
-
-  .form-card:hover {
-    box-shadow: 
-      0 25px 50px rgba(0,0,0,0.15),
-      0 0 0 1px rgba(255,255,255,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.9);
-  }
-
-  /* تأثير التركيز المحسن */
-  .input-group input:focus,
-  .input-group select:focus {
-    animation: focusGlow 0.4s ease;
-  }
-
-  @keyframes focusGlow {
-    0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.1); }
-    100% { box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-  }
-
+  /* الأشكال المتحركة الثابتة */
   .floating-shapes {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
     pointer-events: none;
-    z-index: -1;
+    z-index: -2;
   }
 
   .shape {
     position: absolute;
-    opacity: 0.1;
-    animation: float 15s infinite linear;
+    opacity: 0.08;
+    animation: shapeFloat 20s infinite linear;
   }
 
   .shape:nth-child(1) {
-    top: 20%;
+    top: 15%;
     left: 10%;
     animation-delay: 0s;
+    animation-duration: 18s;
   }
 
   .shape:nth-child(2) {
     top: 60%;
-    right: 10%;
-    animation-delay: 5s;
+    right: 15%;
+    animation-delay: 6s;
+    animation-duration: 22s;
   }
 
   .shape:nth-child(3) {
-    bottom: 20%;
+    bottom: 25%;
     left: 20%;
-    animation-delay: 10s;
+    animation-delay: 12s;
+    animation-duration: 16s;
   }
 
-  @keyframes float {
-    0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
-    100% { transform: translateY(0px) rotate(360deg); }
+  .shape:nth-child(4) {
+    top: 80%;
+    right: 60%;
+    animation-delay: 3s;
+    animation-duration: 25s;
+  }
+
+  .shape:nth-child(5) {
+    top: 30%;
+    left: 70%;
+    animation-delay: 9s;
+    animation-duration: 20s;
+  }
+
+  @keyframes shapeFloat {
+    0% { 
+      transform: translateY(0px) rotate(0deg) scale(1); 
+      opacity: 0.08; 
+    }
+    25% { 
+      transform: translateY(-30px) rotate(90deg) scale(1.1); 
+      opacity: 0.12; 
+    }
+    50% { 
+      transform: translateY(-15px) rotate(180deg) scale(0.9); 
+      opacity: 0.06; 
+    }
+    75% { 
+      transform: translateY(-40px) rotate(270deg) scale(1.05); 
+      opacity: 0.1; 
+    }
+    100% { 
+      transform: translateY(0px) rotate(360deg) scale(1); 
+      opacity: 0.08; 
+    }
+  }
+
+  /* تحسينات للهاتف المحمول */
+  @media (max-width: 480px) {
+    body {
+      padding: 15px;
+    }
+
+    .form-card {
+      padding: 35px 30px;
+      border-radius: 25px;
+    }
+
+    .header h2 {
+      font-size: 26px;
+    }
+
+    .header p {
+      font-size: 14px;
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 16px 50px 16px 16px;
+      font-size: 15px;
+      border-radius: 15px;
+    }
+
+    .submit-btn {
+      padding: 18px;
+      font-size: 16px;
+      border-radius: 15px;
+    }
+
+    .input-group {
+      margin-bottom: 24px;
+    }
+  }
+
+  /* تأثيرات التفاعل المحسنة */
+  .input-group {
+    transform: translateZ(0);
+    transition: transform 0.3s ease;
+  }
+
+  .input-group:hover {
+    transform: translateZ(5px);
+  }
+
+  .input-group:hover label {
+    color: #667eea;
+    transform: translateX(5px);
+  }
+
+  .form-card:hover {
+    box-shadow: 
+      0 35px 70px -15px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 15px 50px rgba(102, 126, 234, 0.15);
+    /* إزالة التحريك للأعلى */
+  }
+
+  /* تأثير التركيز المطور */
+  .input-group input:focus,
+  .input-group select:focus {
+    animation: focusRipple 0.6s ease;
+  }
+
+  @keyframes focusRipple {
+    0% { 
+      box-shadow: 
+        0 0 0 0 rgba(102, 126, 234, 0.5),
+        inset 0 2px 4px rgba(0, 0, 0, 0.02); 
+    }
+    50% { 
+      box-shadow: 
+        0 0 0 10px rgba(102, 126, 234, 0.1),
+        inset 0 2px 4px rgba(102, 126, 234, 0.05); 
+    }
+    100% { 
+      box-shadow: 
+        0 0 0 4px rgba(102, 126, 234, 0.12),
+        0 8px 25px rgba(102, 126, 234, 0.15),
+        inset 0 2px 4px rgba(102, 126, 234, 0.05); 
+    }
+  }
+
+  /* تنسيق خاص لحقل المواد */
+  .input-group input[name="subjects"] {
+    font-size: 15px;
+    padding: 18px 55px 18px 18px;
+    line-height: 1.5;
+  }
+
+  .input-group input[name="subjects"]:focus {
+    border-color: #f093fb;
+    box-shadow: 
+      0 0 0 4px rgba(240, 147, 251, 0.12),
+      0 8px 25px rgba(240, 147, 251, 0.15),
+      inset 0 2px 4px rgba(240, 147, 251, 0.05);
+  }
+
+  .input-group input[name="subjects"]:focus + .input-icon {
+    color: #f093fb;
+  }
+
+  /* البطاقة ثابتة */
+  .form-card {
+    /* إزالة الحركة لجعل البطاقة ثابتة */
   }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -359,8 +544,10 @@
 
 <div class="floating-shapes">
   <div class="shape" style="width: 80px; height: 80px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%;"></div>
-  <div class="shape" style="width: 120px; height: 120px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 20px; transform: rotate(45deg);"></div>
+  <div class="shape" style="width: 120px; height: 120px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 25px; transform: rotate(45deg);"></div>
   <div class="shape" style="width: 100px; height: 100px; background: linear-gradient(45deg, #4facfe, #00f2fe); clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
+  <div class="shape" style="width: 90px; height: 90px; background: linear-gradient(45deg, #a8edea, #fed6e3); border-radius: 15px;"></div>
+  <div class="shape" style="width: 70px; height: 70px; background: linear-gradient(45deg, #ffecd2, #fcb69f); clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);"></div>
 </div>
 
 <div class="container">
@@ -414,6 +601,14 @@
       </div>
 
       <div class="input-group">
+        <label>المادة/المواد *</label>
+        <div class="input-wrapper">
+          <input type="text" name="subjects" required placeholder="مثال: رياضيات، فيزياء، كيمياء">
+          <i class="fa fa-book-open input-icon"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
         <label>الشعبة</label>
         <div class="input-wrapper">
           <select name="specialty" id="specialtySelect">
@@ -421,8 +616,8 @@
             <option>علمي</option>
             <option>أدبي</option>
             <option>تقني</option>
-            <option>رياضي</option>
             <option>تسيير واقتصاد</option>
+            <option>رياضي</option>
           </select>
           <i class="fa fa-book input-icon"></i>
         </div>
@@ -434,7 +629,7 @@
       </button>
       
       <div class="loading" id="loading">
-        <i class="fa fa-spinner fa-spin" style="font-size: 18px; margin-left: 10px;"></i>
+        <i class="fa fa-spinner fa-spin" style="font-size: 20px; margin-left: 10px;"></i>
         جاري التسجيل...
       </div>
       
@@ -450,6 +645,35 @@
   const levelSelect = document.getElementById("levelSelect");
   const specialtySelect = document.getElementById("specialtySelect");
 
+  // تحسين حقل المواد
+  const subjectsInput = document.querySelector('input[name="subjects"]');
+  
+  // إضافة فواصل تلقائياً عند الكتابة
+  subjectsInput.addEventListener('input', function(e) {
+    let value = this.value;
+    
+    // إضافة تأثير بصري للمواد المدخلة
+    if (value.length > 0) {
+      this.style.background = 'linear-gradient(145deg, #fff5fd, #f0f7ff)';
+      this.style.borderColor = '#f093fb';
+      
+      // اقتراحات بسيطة للمواد الشائعة
+      if (value.includes('ر') && !value.includes('رياضيات')) {
+        this.setAttribute('title', 'اقتراح: رياضيات');
+      } else if (value.includes('ف') && !value.includes('فيزياء')) {
+        this.setAttribute('title', 'اقتراح: فيزياء');
+      } else if (value.includes('ك') && !value.includes('كيمياء')) {
+        this.setAttribute('title', 'اقتراح: كيمياء');
+      } else {
+        this.removeAttribute('title');
+      }
+    } else {
+      this.style.background = 'linear-gradient(145deg, #f8fafc, #ffffff)';
+      this.style.borderColor = '#e2e8f0';
+      this.removeAttribute('title');
+    }
+  });
+
   // تعطيل الشعبة إذا كان المستوى متوسط
   levelSelect.addEventListener("change", () => {
     const middleLevels = ["أولى متوسط","ثانية متوسط","ثالثة متوسط","رابعة متوسط"];
@@ -457,21 +681,33 @@
       specialtySelect.value = "";
       specialtySelect.disabled = true;
       specialtySelect.style.opacity = "0.5";
+      specialtySelect.style.transform = "scale(0.98)";
     } else {
       specialtySelect.disabled = false;
       specialtySelect.style.opacity = "1";
+      specialtySelect.style.transform = "scale(1)";
     }
   });
 
-  // تأثيرات التفاعل
+  // تأثيرات التفاعل المطورة
   const inputs = document.querySelectorAll('input, select');
   inputs.forEach(input => {
     input.addEventListener('focus', function() {
-      this.parentElement.parentElement.style.transform = 'translateZ(10px)';
+      this.parentElement.parentElement.style.transform = 'translateZ(15px) scale(1.02)';
+      this.parentElement.parentElement.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
     });
     
     input.addEventListener('blur', function() {
-      this.parentElement.parentElement.style.transform = 'translateZ(0)';
+      this.parentElement.parentElement.style.transform = 'translateZ(0) scale(1)';
+    });
+
+    // تأثير الكتابة
+    input.addEventListener('input', function() {
+      if (this.value.length > 0) {
+        this.style.background = 'linear-gradient(145deg, #ffffff, #f0f7ff)';
+      } else {
+        this.style.background = 'linear-gradient(145deg, #f8fafc, #ffffff)';
+      }
     });
   });
 
@@ -482,19 +718,21 @@
     message.style.display = "none";
     message.className = "message";
     
-    // إظهار التحميل
+    // إظهار التحميل مع تأثير
     loading.style.display = "block";
+    loading.style.animation = "loadingPulse 1.5s infinite";
 
     const data = {
       lastname: form.lastname.value.trim(),
       name: form.name.value.trim(),
       phone: form.phone.value.trim(),
       level: form.level.value,
+      subjects: form.subjects.value.trim(),
       specialty: form.specialty.value
     };
 
     try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbwhKB8f26EntSqNe-ys5jK_vDe9h4H4AWf-mN_IrKX0A5Zcben1HRyOkiRyp_HaH970/exec", {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwxAAIp-eD6y6JlZ1Kuv8jNnBMCTUIYjhUqPD3yg3BR01Ln-VNB57htm7bjf7KnKapD9w/exec", {
         method: "POST",
         body: JSON.stringify(data)
       });
@@ -514,10 +752,13 @@
       if (result.success) {
         form.reset();
         
-        // تأثير نجاح إضافي
+        // تأثير نجاح بسيط
         setTimeout(() => {
-          message.style.display = "none";
-        }, 5000);
+          message.style.animation = 'fadeOut 0.5s ease';
+          setTimeout(() => {
+            message.style.display = "none";
+          }, 500);
+        }, 4000);
       }
       
     } catch (err) {
@@ -528,22 +769,39 @@
     }
   });
 
-  // تأثير تحريك الخلفية عند تحريك الماوس
-  document.addEventListener('mousemove', (e) => {
-    const shapes = document.querySelectorAll('.shape');
-    const mouseX = e.clientX / window.innerWidth;
-    const mouseY = e.clientY / window.innerHeight;
-    
-    shapes.forEach((shape, index) => {
-      const speed = (index + 1) * 0.05;
-      const x = (mouseX - 0.5) * speed * 50;
-      const y = (mouseY - 0.5) * speed * 50;
-      
-      shape.style.transform += ` translate(${x}px, ${y}px)`;
-    });
+  // تأثير تفاعلي ثابت مع البطاقة
+  const formCard = document.querySelector('.form-card');
+  formCard.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-3px)';
+    this.style.transition = 'all 0.3s ease';
   });
+
+  formCard.addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(0)';
+  });
+
+  // تأثير إضافي للأزرار
+  const submitBtn = document.querySelector('.submit-btn');
+  submitBtn.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-4px) scale(1.02)';
+    this.style.boxShadow = '0 12px 35px rgba(102, 126, 234, 0.4), 0 4px 15px rgba(0, 0, 0, 0.1)';
+  });
+
+  submitBtn.addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(0) scale(1)';
+    this.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4), 0 2px 10px rgba(0, 0, 0, 0.1)';
+  });
+
+  // تأثير fadeOut للرسائل
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-20px); }
+    }
+  `;
+  document.head.appendChild(style);
 </script>
 
 </body>
 </html>
-

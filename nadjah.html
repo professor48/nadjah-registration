@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الطلاب</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Cairo', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* خلفية متحركة */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(72, 187, 120, 0.3) 0%, transparent 50%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+  }
+
+  @keyframes backgroundFloat {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .form-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 40px 35px;
+    border-radius: 25px;
+    box-shadow: 
+      0 20px 40px rgba(0,0,0,0.1),
+      0 0 0 1px rgba(255,255,255,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    background-size: 300% 100%;
+    animation: gradientShift 3s ease-in-out infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(60px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 35px;
+  }
+
+  .header h2 {
+    color: #2d3748;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    color: #718096;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .input-group {
+    margin-bottom: 25px;
+    position: relative;
+  }
+
+  .input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-group input,
+  .input-group select {
+    width: 100%;
+    padding: 16px 50px 16px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f8fafc;
+    color: #2d3748;
+    font-family: inherit;
+  }
+
+  .input-group input:focus,
+  .input-group select:focus {
+    border-color: #667eea;
+    box-shadow: 
+      0 0 0 3px rgba(102, 126, 234, 0.1),
+      0 4px 12px rgba(102, 126, 234, 0.15);
+    background: white;
+    transform: translateY(-2px);
+  }
+
+  .input-group input:valid,
+  .input-group select:valid {
+    border-color: #48bb78;
+  }
+
+  .input-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .input-group input:focus + .input-icon,
+  .input-group select:focus + .input-icon {
+    color: #667eea;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
+
+  .submit-btn:hover::before {
+    left: 100%;
+  }
+
+  .submit-btn:active {
+    transform: translateY(-1px);
+  }
+
+  .loading {
+    text-align: center;
+    margin-top: 20px;
+    color: #667eea;
+    display: none;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .message {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 600;
+    display: none;
+    padding: 15px;
+    border-radius: 10px;
+    animation: messageSlide 0.5s ease;
+  }
+
+  @keyframes messageSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  }
+
+  .error {
+    background: linear-gradient(135deg, #f56565, #e53e3e);
+    color: white;
+    box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+  }
+
+  /* تحسينات للهاتف المحمول */
+  @media (max-width: 480px) {
+    .form-card {
+      padding: 30px 25px;
+      border-radius: 20px;
+    }
+
+    .header h2 {
+      font-size: 24px;
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 14px 45px 14px 14px;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      padding: 16px;
+      font-size: 15px;
+    }
+  }
+
+  /* تأثيرات إضافية للتفاعل */
+  .input-group {
+    transform: translateZ(0);
+  }
+
+  .input-group:hover label {
+    color: #667eea;
+  }
+
+  .form-card:hover {
+    box-shadow: 
+      0 25px 50px rgba(0,0,0,0.15),
+      0 0 0 1px rgba(255,255,255,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+
+  /* تأثير التركيز المحسن */
+  .input-group input:focus,
+  .input-group select:focus {
+    animation: focusGlow 0.4s ease;
+  }
+
+  @keyframes focusGlow {
+    0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.1); }
+    100% { box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+  }
+
+  .floating-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: float 15s infinite linear;
+  }
+
+  .shape:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .shape:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 5s;
+  }
+
+  .shape:nth-child(3) {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 10s;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+    100% { transform: translateY(0px) rotate(360deg); }
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="floating-shapes">
+  <div class="shape" style="width: 80px; height: 80px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%;"></div>
+  <div class="shape" style="width: 120px; height: 120px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 20px; transform: rotate(45deg);"></div>
+  <div class="shape" style="width: 100px; height: 100px; background: linear-gradient(45deg, #4facfe, #00f2fe); clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
+</div>
+
+<div class="container">
+  <div class="form-card">
+    <div class="header">
+      <h2>📚 تسجيل الطلاب</h2>
+      <p>أهلاً بك! يرجى ملء البيانات للتسجيل</p>
+    </div>
+    
+    <form id="registerForm">
+      
+      <div class="input-group">
+        <label>اللقب *</label>
+        <div class="input-wrapper">
+          <input type="text" name="lastname" required placeholder="أدخل اللقب">
+          <i class="fa fa-user input-icon"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>الاسم *</label>
+        <div class="input-wrapper">
+          <input type="text" name="name" required placeholder="أدخل الاسم">
+          <i class="fa fa-id-card input-icon"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>رقم الهاتف *</label>
+        <div class="input-wrapper">
+          <input type="tel" name="phone" pattern="[0-9]{8,15}" required placeholder="أدخل رقم الهاتف">
+          <i class="fa fa-phone input-icon"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>المستوى *</label>
+        <div class="input-wrapper">
+          <select name="level" id="levelSelect" required>
+            <option value="">-- اختر المستوى --</option>
+            <option>أولى متوسط</option>
+            <option>ثانية متوسط</option>
+            <option>ثالثة متوسط</option>
+            <option>رابعة متوسط</option>
+            <option>أولى ثانوي</option>
+            <option>ثانية ثانوي</option>
+            <option>ثالثة ثانوي</option>
+          </select>
+          <i class="fa fa-graduation-cap input-icon"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>الشعبة</label>
+        <div class="input-wrapper">
+          <select name="specialty" id="specialtySelect">
+            <option value="">-- اختر الشعبة --</option>
+            <option>علمي</option>
+            <option>أدبي</option>
+            <option>تقني</option>
+            <option>رياضي</option>
+          </select>
+          <i class="fa fa-book input-icon"></i>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        <i class="fa fa-check-circle" style="margin-left: 8px;"></i>
+        تسجيل الآن
+      </button>
+      
+      <div class="loading" id="loading">
+        <i class="fa fa-spinner fa-spin" style="font-size: 18px; margin-left: 10px;"></i>
+        جاري التسجيل...
+      </div>
+      
+      <div class="message" id="message"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById("registerForm");
+  const loading = document.getElementById("loading");
+  const message = document.getElementById("message");
+  const levelSelect = document.getElementById("levelSelect");
+  const specialtySelect = document.getElementById("specialtySelect");
+
+  // تعطيل الشعبة إذا كان المستوى متوسط
+  levelSelect.addEventListener("change", () => {
+    const middleLevels = ["أولى متوسط","ثانية متوسط","ثالثة متوسط","رابعة متوسط"];
+    if (middleLevels.includes(levelSelect.value)) {
+      specialtySelect.value = "";
+      specialtySelect.disabled = true;
+      specialtySelect.style.opacity = "0.5";
+    } else {
+      specialtySelect.disabled = false;
+      specialtySelect.style.opacity = "1";
+    }
+  });
+
+  // تأثيرات التفاعل
+  const inputs = document.querySelectorAll('input, select');
+  inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+      this.parentElement.parentElement.style.transform = 'translateZ(10px)';
+    });
+    
+    input.addEventListener('blur', function() {
+      this.parentElement.parentElement.style.transform = 'translateZ(0)';
+    });
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    // إخفاء الرسائل السابقة
+    message.style.display = "none";
+    message.className = "message";
+    
+    // إظهار التحميل
+    loading.style.display = "block";
+
+    const data = {
+      lastname: form.lastname.value.trim(),
+      name: form.name.value.trim(),
+      phone: form.phone.value.trim(),
+      level: form.level.value,
+      specialty: form.specialty.value
+    };
+
+    try {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwhKB8f26EntSqNe-ys5jK_vDe9h4H4AWf-mN_IrKX0A5Zcben1HRyOkiRyp_HaH970/exec", {
+        method: "POST",
+        body: JSON.stringify(data)
+      });
+      
+      const result = await res.json();
+      
+      // إخفاء التحميل
+      loading.style.display = "none";
+      
+      // إظهار الرسالة
+      message.style.display = "block";
+      message.className = result.success ? "message success" : "message error";
+      message.innerHTML = result.success ? 
+        '<i class="fa fa-check-circle" style="margin-left: 8px;"></i>' + result.message :
+        '<i class="fa fa-exclamation-triangle" style="margin-left: 8px;"></i>' + result.message;
+      
+      if (result.success) {
+        form.reset();
+        
+        // تأثير نجاح إضافي
+        setTimeout(() => {
+          message.style.display = "none";
+        }, 5000);
+      }
+      
+    } catch (err) {
+      loading.style.display = "none";
+      message.style.display = "block";
+      message.className = "message error";
+      message.innerHTML = '<i class="fa fa-wifi" style="margin-left: 8px;"></i>حدث خطأ في الاتصال بالخادم';
+    }
+  });
+
+  // تأثير تحريك الخلفية عند تحريك الماوس
+  document.addEventListener('mousemove', (e) => {
+    const shapes = document.querySelectorAll('.shape');
+    const mouseX = e.clientX / window.innerWidth;
+    const mouseY = e.clientY / window.innerHeight;
+    
+    shapes.forEach((shape, index) => {
+      const speed = (index + 1) * 0.05;
+      const x = (mouseX - 0.5) * speed * 50;
+      const y = (mouseY - 0.5) * speed * 50;
+      
+      shape.style.transform += ` translate(${x}px, ${y}px)`;
+    });
+  });
+</script>
+
+</body>
+</html>
